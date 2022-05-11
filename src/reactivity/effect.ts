@@ -4,7 +4,7 @@ let  curEffect
 let targetMap = new Map()
 let shouldTrack = false
 
-class ReactiveEffect {
+export class ReactiveEffect {
   public deps: any = []
   constructor (private fn, public scheduler?) {}
   actived=true
@@ -49,9 +49,13 @@ export const effect = (fn, options:any={}) => {
   return runner
 }
 
+export function isTracking() {
+  return shouldTrack && curEffect !== undefined;
+}
+
 
 export const track = (target, key) => {
-  if (!shouldTrack) return
+  if (!isTracking()) return
   let depsMap = targetMap.get(target)
   if (!depsMap) {
     depsMap = new Map()
@@ -62,16 +66,21 @@ export const track = (target, key) => {
     dep = new Set()
     depsMap.set(key, dep)
   }
+  trackEffect(dep)
+}
 
-  if (!curEffect) return
-
+export const trackEffect = (dep) => {
   dep.add(curEffect)
   curEffect.deps.push(dep)
 }
 export const trigger = (target, key) => {
   let depsMap = targetMap.get(target)
   let dep = depsMap.get(key)
-  console.log(targetMap, '111');
+  triggerEffect(dep)
+
+}
+
+export const triggerEffect = (dep)=> {
   
   dep.forEach(item => {
     if (item.scheduler) {
@@ -79,7 +88,6 @@ export const trigger = (target, key) => {
     } else {
       item.runner()
     }
-    
   });
 }
 
