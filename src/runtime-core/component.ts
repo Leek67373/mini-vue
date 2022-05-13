@@ -1,11 +1,11 @@
 export function creatComponentInstance(vnode: any) {
-  const component = {
+  const instance = {
     vnode,
     type: vnode.type,
     setupStatus: {}
   }
 
-  return component
+  return instance
 }
 
 export function setuComponent(instance) {

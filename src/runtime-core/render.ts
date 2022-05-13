@@ -34,6 +34,9 @@ function setupRenderEffect(instance, container: any) {
   patch(subTree, container)
 }
 
+
+
+
 function processElement(vnode: any, container: any) {
   mountElement(vnode, container)
 }
